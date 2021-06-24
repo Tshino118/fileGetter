@@ -21,6 +21,7 @@ def monoGetter():
 def multiGetter():
     features={}
     for path in glob.iglob("./domain/*"):
+        print(path)
         file, ext = os.path.splitext(os.path.basename(path))
         splitfile = file.split('_')
         name,var=splitfile[0],splitfile[1]
