@@ -1,5 +1,10 @@
 import getter.fileGetter as Getter
+import getter.folderUnwrap as unwrap
+import getter.weekdaysNumber as weekNumber
+
 import pandas as pd
+import os
+import shutil
 
 getter=Getter.multiGetter
 get=getter()
@@ -8,19 +13,34 @@ features_df=pd.DataFrame(data=get.values(),index=get.keys())
 print(features_df)
 #'file', 'path', 'ext', 'name', 'eye_state', 'datetime','week_num'
 print(features_df['eye_state'])
-monday=features_df[:].query('eye_state=="O" and week_num == 0 ')
-print('monday',monday,"\nNumber:",len(monday))
 
-tuesday=features_df[:].query('eye_state=="O" and week_num == 1 ')
-print('tuesday',tuesday,"\nNumber:",len(tuesday))
+names=features_df['name'].unique()
+weekNum=weekNumber.weekdaysNum
 
-wednesday=features_df[:].query('eye_state=="O" and week_num == 2 ')
-print('wednesday',wednesday,"\nNumber:",len(wednesday))
+for name in names:
+    print(f'\n{name}')
+    week_n=weekNum(features_df[features_df['name']==name])
 
-thursday=features_df[:].query('eye_state=="O" and week_num == 3 ')
-print('thursday',thursday,"\nNumber:",len(thursday))
+shinohara_thu_O=features_df[features_df['name']=='shinohara'].query('eye_state=="O" and week_num == 3')
+abe_thu_O=features_df[features_df['name']=='abe'].query('eye_state=="O" and week_num == 3')
 
-friday=features_df[:].query('eye_state=="O" and week_num == 4 ')
-print('friday',friday,"\nNumber:",len(friday))
+himei_thu_O=features_df[features_df['name']=='himei'].query('eye_state=="O" and week_num == 3')
+ideguchi_thu_O=features_df[features_df['name']=='ideguchi'].query('eye_state=="O" and week_num == 3')
+inoue_thu_O=features_df[features_df['name']=='inoue'].query('eye_state=="O" and week_num == 3')
+maeta_thu_O=features_df[features_df['name']=='maeta'].query('eye_state=="O" and week_num == 3')
 
-print(f'mon:tue:wed:thu:fri\n  {len(monday)}:  {len(tuesday)}:  {len(wednesday)}:  {len(thursday)}:  {len(friday)}')
+newdatas={
+    'shinohara_thu_O':shinohara_thu_O,
+    'abe_thu_O':abe_thu_O,
+    'himei_thu_O':himei_thu_O,
+    'ideguchi_thu_O':ideguchi_thu_O,
+    'inoue_thu_O':inoue_thu_O,
+    'maeta_thu_O':maeta_thu_O
+}
+
+for newdir,newdata in newdatas.items():
+    os.mkdir(rf'./data/{newdir}')
+    datapath=newdata['path']
+    [shutil.move(path, rf'./data/{newdir}') for path in datapath]
+
+
